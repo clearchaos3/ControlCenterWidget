@@ -11,7 +11,7 @@ import SwiftUI
 struct ControlCenterWidgetApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(brightness: 100.0, volume: 100.0)
         }
     }
 }

@@ -32,6 +32,8 @@ struct ContentView: View {
     @State var currentSong = 0
     @State var count = (songs.count - 1)
     @State var airplay = false
+    @State var brightness: Float
+    @State var volume: Float
     
     func changeSong(_ direction: String) -> Int {
         if direction == "previous" {
@@ -54,6 +56,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            //Album Art
             VStack(spacing: self.spacing) {
                 HStack(spacing: self.spacing) {
                     Image(songs[currentSong].image)
@@ -78,6 +81,7 @@ struct ContentView: View {
                     }
                 }
             }
+            //Control Center
             HStack {
                 Spacer()
                 //Controls
@@ -211,14 +215,71 @@ struct ContentView: View {
                 
                 Spacer()
             }
+            //Brightness
+ 
+                    
+                    
+            HStack {
+                Spacer()
+                VStack(spacing: 24) {
+                    
+                    HStack{
+                        GeometryReader { geometry in
+                            Rectangle()
+                                .foregroundColor(Color(UIColor.white))
+                                .opacity(0.8)
+                                .frame(width: geometry.size.width * CGFloat(self.brightness / 100))
+                                .gesture(DragGesture(minimumDistance: 0)
+                                        .onChanged({value in
+                                            self.brightness = min(max(0, Float(value.location.x / geometry.size.width * 100)), 100)
+                                        })
+                                )
+                                
+                                
+                        }
+                    }
+                    .overlay(Image(systemName: "sun.max.fill").padding(.bottom, 30.0).rotationEffect(.degrees(90.0)), alignment: .leading)
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(24.0)
+                    .frame(width: 140.0, height: 60)
+//                    .padding(12)
+                    
+                    
+                    HStack{
+                        GeometryReader { geometry in
+                            Rectangle()
+                                .foregroundColor(Color(UIColor.white))
+                                .opacity(0.8)
+                                .frame(width: geometry.size.width * CGFloat(self.volume / 100))
+                                .gesture(DragGesture(minimumDistance: 0)
+                                        .onChanged({value in
+                                            self.volume = min(max(0, Float(value.location.x / geometry.size.width * 100)), 100)
+                                        })
+                                )
+                        }
+                    }
+                    .overlay(Image(systemName: "speaker.3.fill").padding(.bottom, 30.0).rotationEffect(.degrees(90.0)), alignment: .leading)
+                    .background(Color(UIColor.secondarySystemBackground))
+                    .cornerRadius(24.0)
+                    .frame(width: 140.0, height: 60)
+                    
+                    
+                }
+                .padding(.top, -30.0)
+                .rotationEffect(.degrees(-90.0))
+                
+            }
+            .padding()
+            
             Spacer()
         }
+        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(brightness: 100.0, volume: 100.0)
             .preferredColorScheme(.dark)
     }
 }
